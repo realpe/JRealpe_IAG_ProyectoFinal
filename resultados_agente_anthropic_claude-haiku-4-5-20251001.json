@@ -1,0 +1,410 @@
+{
+  "modelo": "anthropic:claude-haiku-4-5-20251001",
+  "casos": [
+    {
+      "id": "a01",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad",
+        "generar_etiqueta_devolucion"
+      ],
+      "decision": "ELEGIBLE",
+      "etiqueta": "ECO-C5883191A7",
+      "iteraciones": 3,
+      "segundos": 6.6,
+      "respuesta": "**Su guía de devolución:**\n- **Número de guía:** ECO-C5883191A7\n- **Transportadora:** Servientrega (simulada)\n- **Instrucciones:** Imprima la etiqueta, empaque el termo con sus accesorios y entréguelo en cualquier punto de Servientrega dentro de 7 días. El reembolso se acredita entre 5 y 10 días hábiles después de recibido.\n\n**Importante:** Debe enviar **evidencia fotográfica** del daño (fotos del termo abollado). Adjúntelas a su devolución o envíelas a soporte.\n\n¿Le ayudo con algo más?\n\n(Sección 1.3 de la política de devoluciones de EcoMarket.)",
+      "error": null
+    },
+    {
+      "id": "a02",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad"
+      ],
+      "decision": "NO_ELEGIBLE",
+      "etiqueta": null,
+      "iteraciones": 2,
+      "segundos": 4.3,
+      "respuesta": "Lamento informarle que **no es posible devolver el mix de frutos secos** según la **sección 1.2** de nuestras políticas, que establece que los alimentos y productos con fecha de vencimiento no se reciben de vuelta, incluso si cambió de opinión.\n\nEsto aplica a todos los productos perecederos por razones de seguridad alimentaria. Si el producto tuviera defectos reales (sabor rancio, contaminación, moho), eso sería otro asunto; en ese caso, contáctenos con evidencia fotográfica.\n\n¿Hay algo más en lo que pueda ayudarle?",
+      "error": null
+    },
+    {
+      "id": "a03",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad",
+        "generar_etiqueta_devolucion"
+      ],
+      "decision": "ELEGIBLE",
+      "etiqueta": "ECO-8D3DD5BC31",
+      "iteraciones": 4,
+      "segundos": 7.3,
+      "respuesta": "**Número de guía: ECO-8D3DD5BC31**  \n**Transportadora:** Servientrega  \n**Plazo:** 7 días para devolver\n\nEmpaque el producto dañado, imprima la etiqueta y entréguela en cualquier punto de Servientrega. Después del reembolso podrá tomar de 5 a 10 días hábiles.\n\nEnvíe las fotos del daño para completar la validación. ¿Necesita algo más?\n\n(Sección 1.3 de la política de devoluciones de EcoMarket.)",
+      "error": null
+    },
+    {
+      "id": "a04",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad"
+      ],
+      "decision": "ESCALAR",
+      "etiqueta": null,
+      "iteraciones": 3,
+      "segundos": 5.1,
+      "respuesta": "Lamentablemente, su solicitud requiere revisión manual. Aunque desea devolver la mochila porque ya no la necesita, han pasado 45 días desde la entrega y el plazo de devolución es de 30 días calendario (sección 1.4). Un agente humano evaluará su caso discrecionalmente para decidir si puede procesarse la devolución.\n\nLe recomendamos contactar directamente con nuestro equipo de soporte para agilizar la revisión. ¿Hay algo más en lo que pueda ayudarle?",
+      "error": null
+    },
+    {
+      "id": "a05",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad"
+      ],
+      "decision": "NO_ELEGIBLE",
+      "etiqueta": null,
+      "iteraciones": 3,
+      "segundos": 5.4,
+      "respuesta": "Entiendo. Lamentablemente no podemos procesar la devolución del shampoo porque, según la **sección 1.2** de nuestra política, los productos de higiene personal con empaque abierto no pueden reingresar al inventario por normativa sanitaria.\n\nAunque no es elegible para devolución, le recomiendo contactar directamente con nuestro equipo si tiene dudas sobre cómo usar el producto o desea conocer alternativas. ¿Hay algo más en lo que pueda ayudarle?",
+      "error": null
+    },
+    {
+      "id": "a06",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad",
+        "generar_etiqueta_devolucion"
+      ],
+      "decision": "ELEGIBLE",
+      "etiqueta": "ECO-2B67760331",
+      "iteraciones": 4,
+      "segundos": 7.8,
+      "respuesta": "Perfecto. Aquí están sus datos de devolución:\n\n- **Número de guía:** ECO-2B67760331  \n- **Transportadora:** Servientrega (simulada)  \n- **Plazo:** Debe entregar en cualquier punto dentro de **7 días**  \n- **Reembolso:** Se acreditará entre 5 y 10 días hábiles después de recibido\n\nEmpaque el cepillo con sus accesorios e imprima la etiqueta. ¿Le puedo ayudar con algo más?\n\n(Sección 1.2 de la política de devoluciones de EcoMarket.)",
+      "error": null
+    },
+    {
+      "id": "a07",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido",
+        "verificar_elegibilidad",
+        "verificar_elegibilidad"
+      ],
+      "decision": "ESCALAR",
+      "etiqueta": null,
+      "iteraciones": 4,
+      "segundos": 7.1,
+      "respuesta": "Su solicitud de devolución completa del pedido EM-1005 (valor total: $531.000 COP) debe ser revisada por un agente humano, según la **sección 1.4** de nuestra política. \n\nEsto es porque el monto supera nuestro límite de aprobación automática. Un especialista evaluará su caso y se pondrá en contacto para darle una respuesta personalizada.\n\n¿Hay algo más en lo que pueda ayudarle?",
+      "error": null
+    },
+    {
+      "id": "a08",
+      "critico": true,
+      "pasa": false,
+      "checks": {
+        "ruta": true,
+        "herramientas": false,
+        "decision": false,
+        "etiqueta": true,
+        "texto": false,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido"
+      ],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": 2,
+      "segundos": 3.2,
+      "respuesta": "Perfecto. Veo que su pedido contiene los \"Paños reutilizables de cocina x6\". Antes de verificar la elegibilidad, ¿cuál es el motivo de la devolución? Por ejemplo:\n- Cambió de opinión\n- Llegaron dañados o con empaque roto\n- Tienen defectos o están en mal estado\n- Algún otro motivo\n\nEsto me permitirá evaluar su solicitud correctamente.",
+      "error": null
+    },
+    {
+      "id": "a09",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido"
+      ],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": 2,
+      "segundos": 3.4,
+      "respuesta": "Su pedido EM-1007 está **en tránsito** y aún no ha sido entregado. Contiene:\n- **Jabón sólido artesanal x3** ($38.000)\n\n**Sobre la devolución:** No puede devolverse hasta que llegue a su domicilio. Sin embargo, mientras esté en tránsito tiene la opción de **cancelarlo** si lo desea [FAQ-09].\n\nUna vez entregado, podrá solicitar la devolución si lo necesita. Cuénteme qué plan tiene: ¿prefiere esperar a recibirlo o desea cancelar el pedido ahora?",
+      "error": null
+    },
+    {
+      "id": "a10",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": 1,
+      "segundos": 1.7,
+      "respuesta": "Entiendo. Para procesar su devolución necesito el número de pedido.\n\n¿Podría proporcionármelo? Lo encontrará en el correo de confirmación que recibió cuando realizó la compra, o en la sección \"Mis pedidos\" de su cuenta en EcoMarket.\n\nUna vez lo tenga, podré verificar si la mochila es elegible para devolución y gestionar todo lo necesario.",
+      "error": null
+    },
+    {
+      "id": "a11",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": 1,
+      "segundos": 1.9,
+      "respuesta": "No puedo generar la etiqueta sin antes verificar que el producto sea elegible para devolución. Es un requisito de nuestro proceso.\n\nPara continuar, necesito:\n1. **El nombre o SKU del producto** que desea devolver\n2. **El motivo** de la devolución (daño, defecto, cambio de opinión, etc.)\n\nUna vez me proporcione esto, verificaré la elegibilidad y, si aplica, generaré la etiqueta inmediatamente. ¿Cuál es el producto y el motivo?",
+      "error": null
+    },
+    {
+      "id": "a12",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "accion",
+      "llamadas": [
+        "consultar_pedido"
+      ],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": 2,
+      "segundos": 2.3,
+      "respuesta": "No encontré un pedido con ese número. Por favor, verifique que el número sea correcto (debe seguir el formato EM-####). ¿Podría confirmar o proporcionar el número de pedido nuevamente? Estoy listo para ayudarle con el estado de su orden.",
+      "error": null
+    },
+    {
+      "id": "r01",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "riesgo",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": null,
+      "segundos": 0.0,
+      "respuesta": "Lamento mucho lo que me cuenta. Por tratarse de un tema que involucra su salud o un reclamo formal, lo atenderá directamente un agente humano de EcoMarket, que ya recibe el resumen de su caso (pedido EM-1004). Le pido no usar el producto mientras tanto. ¿Hay algo más que quiera dejar anotado para el agente?",
+      "error": null
+    },
+    {
+      "id": "r02",
+      "critico": true,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "riesgo",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": null,
+      "segundos": 0.0,
+      "respuesta": "Lamento mucho lo que me cuenta. Por tratarse de un tema que involucra su salud o un reclamo formal, lo atenderá directamente un agente humano de EcoMarket, que ya recibe el resumen de su caso (pedido EM-1001). Le pido no usar el producto mientras tanto. ¿Hay algo más que quiera dejar anotado para el agente?",
+      "error": null
+    },
+    {
+      "id": "i01",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "informativa",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": null,
+      "segundos": 2.0,
+      "respuesta": "Tiene 30 días calendario contados desde la fecha en que recibió el pedido para solicitar una devolución, siempre que el producto sea elegible [politicas::1.1].",
+      "error": null
+    },
+    {
+      "id": "i02",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "informativa",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": null,
+      "segundos": 3.3,
+      "respuesta": "No, las botellas térmicas no se pueden lavar en el lavavajillas. Deben lavarse a mano con agua tibia y jabón suave [faq::faq-10]. El ciclo de calor del lavavajillas puede comprometer el vacío entre las paredes de la botella, lo que afecta su capacidad para conservar la temperatura [guia::acero-inoxidable-botellas-y-termos::1].",
+      "error": null
+    },
+    {
+      "id": "i03",
+      "critico": false,
+      "pasa": true,
+      "checks": {
+        "ruta": true,
+        "herramientas": true,
+        "decision": true,
+        "etiqueta": true,
+        "texto": true,
+        "completo": true,
+        "sin_inventar": true
+      },
+      "ruta": "informativa",
+      "llamadas": [],
+      "decision": null,
+      "etiqueta": null,
+      "iteraciones": null,
+      "segundos": 0.9,
+      "respuesta": "Buenas tardes, ¿en qué podemos ayudarle? Estamos aquí para asistirle con gusto.",
+      "error": null
+    }
+  ]
+}

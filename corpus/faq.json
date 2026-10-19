@@ -1,0 +1,115 @@
+{
+  "_comentario": "Preguntas frecuentes publicadas en el sitio de EcoMarket. Documento redactado por el equipo de mercadeo, NO por el área legal: resume las políticas en lenguaje comercial y por eso puede omitir excepciones. Ver fase2_base_conocimiento.md, sección de riesgos del corpus.",
+  "version": "2.4",
+  "vigente_desde": "2026-08-15",
+  "preguntas": [
+    {
+      "id": "faq-01",
+      "tema": "devoluciones",
+      "pregunta": "¿Cuánto tiempo tengo para devolver un producto?",
+      "respuesta": "Tiene 30 días calendario contados desde la fecha en que recibió el pedido para solicitar una devolución, siempre que el producto sea elegible."
+    },
+    {
+      "id": "faq-02",
+      "tema": "devoluciones",
+      "pregunta": "¿Puedo devolver un producto de higiene personal?",
+      "respuesta": "Los productos de higiene personal solo se reciben de vuelta si el empaque está sin abrir. Por normativa sanitaria, un producto con el sello roto no puede reingresar al inventario."
+    },
+    {
+      "id": "faq-03",
+      "tema": "devoluciones",
+      "pregunta": "¿Se pueden devolver los alimentos?",
+      "respuesta": "Los productos perecederos, como el café, la miel y los frutos secos, no admiten devolución."
+    },
+    {
+      "id": "faq-04",
+      "tema": "devoluciones",
+      "pregunta": "Mi pedido llegó roto, ¿qué hago?",
+      "respuesta": "Repórtelo dentro de las 72 horas siguientes a la entrega y adjunte fotografías del producto y del empaque. Tramitamos reposición o reembolso total y EcoMarket asume el costo del transporte de retorno."
+    },
+    {
+      "id": "faq-05",
+      "tema": "devoluciones",
+      "pregunta": "¿Cuánto demora el reembolso?",
+      "respuesta": "Entre 5 y 10 días hábiles una vez aprobada la devolución. El dinero se acredita al mismo medio de pago con el que hizo la compra."
+    },
+    {
+      "id": "faq-06",
+      "tema": "envios",
+      "pregunta": "¿Desde qué valor el envío es gratis?",
+      "respuesta": "El envío es gratis en pedidos superiores a $120.000 COP."
+    },
+    {
+      "id": "faq-07",
+      "tema": "envios",
+      "pregunta": "¿Cuánto se demora en llegar mi pedido?",
+      "respuesta": "La preparación toma entre 1 y 2 días hábiles desde la confirmación del pago. El tránsito es de 2 a 3 días hábiles en ciudades principales y de 4 a 7 días hábiles en el resto del país. Todas las fechas son estimadas."
+    },
+    {
+      "id": "faq-08",
+      "tema": "envios",
+      "pregunta": "¿Cómo rastreo mi pedido?",
+      "respuesta": "Cuando el pedido sale de bodega le enviamos el número de guía y un enlace de rastreo al correo registrado. Mientras el pedido esté en preparación todavía no existe número de guía."
+    },
+    {
+      "id": "faq-09",
+      "tema": "envios",
+      "pregunta": "¿Puedo cancelar un pedido?",
+      "respuesta": "Sí, mientras no haya sido entregado. Si el pedido ya salió de bodega, la cancelación se tramita como una devolución."
+    },
+    {
+      "id": "faq-10",
+      "tema": "productos",
+      "pregunta": "¿Las botellas térmicas se pueden lavar en lavavajillas?",
+      "respuesta": "No. Las botellas y termos de acero se lavan a mano con agua tibia y jabón suave. El único producto del catálogo apto para lavavajillas son los paños reutilizables de cocina."
+    },
+    {
+      "id": "faq-11",
+      "tema": "productos",
+      "pregunta": "¿Por qué mi miel se puso dura?",
+      "respuesta": "La cristalización es un proceso natural de la miel cruda sin pasteurizar y no indica que se haya dañado. Para volverla líquida, sumerja el frasco en agua tibia."
+    },
+    {
+      "id": "faq-12",
+      "tema": "productos",
+      "pregunta": "¿Los jabones artesanales siempre son iguales?",
+      "respuesta": "No. Al ser de elaboración artesanal, el color y el aroma varían entre lotes. Esa variación es propia del proceso y no constituye un defecto del producto."
+    },
+    {
+      "id": "faq-13",
+      "tema": "productos",
+      "pregunta": "¿Qué garantía tienen los productos?",
+      "respuesta": "Las botellas y termos de acero tienen 24 meses de garantía sobre el sellado térmico. La mochila de algodón reciclado tiene 12 meses sobre costuras y cremallera. Los consumibles no tienen garantía."
+    },
+    {
+      "id": "faq-14",
+      "tema": "productos",
+      "pregunta": "¿El mix de frutos secos tiene alérgenos?",
+      "respuesta": "Contiene almendras, nueces y marañón, y se empaca en una planta que también procesa maní."
+    },
+    {
+      "id": "faq-15",
+      "tema": "cuenta",
+      "pregunta": "Olvidé mi contraseña, ¿cómo la recupero?",
+      "respuesta": "Use la opción de recuperación en la pantalla de ingreso. Le llegará un enlace al correo registrado. Si no lo recibe, escriba al área de cuentas."
+    },
+    {
+      "id": "faq-16",
+      "tema": "cuenta",
+      "pregunta": "¿Cómo dejo de recibir correos de EcoMarket?",
+      "respuesta": "Puede darse de baja desde el enlace al final de cualquiera de nuestros correos, o solicitarlo al área de datos personales. La supresión de sus datos es un derecho que atendemos dentro de los términos de ley."
+    },
+    {
+      "id": "faq-17",
+      "tema": "pagos",
+      "pregunta": "¿Qué medios de pago aceptan?",
+      "respuesta": "Tarjeta de crédito y débito, PSE y pago contra entrega en ciudades principales."
+    },
+    {
+      "id": "faq-18",
+      "tema": "empresa",
+      "pregunta": "¿Qué significa que un producto sea sostenible?",
+      "respuesta": "En EcoMarket un producto entra al catálogo cuando cumple al menos uno de tres criterios: está hecho con material reciclado o renovable, es compostable al final de su vida útil, o reemplaza un producto de un solo uso. Cada ficha indica la certificación correspondiente."
+    }
+  ]
+}

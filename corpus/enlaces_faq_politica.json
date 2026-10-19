@@ -1,0 +1,35 @@
+{
+  "_comentario": "Tabla de enlaces entre cada pregunta de faq.json y la(s) sección(es) de politicas.md que la gobiernan. La FAQ la redacta mercadeo y puede omitir excepciones; cuando el recuperador trae una pregunta de la FAQ, el sistema añade al contexto las secciones enlazadas aquí (estrategia E de la Fase 2). El archivo se mantiene aparte de faq.json para que la FAQ conserve su forma original y para que el área dueña de las políticas pueda revisarlo. Las claves de sección corresponden a la numeración de politicas.md (1.1, 1.2, 1.3, 2, 2.1...). Las preguntas sin entrada no tienen sección normativa asociada.",
+  "version": "1.0",
+  "enlaces": {
+    "faq-01": [
+      "1.1"
+    ],
+    "faq-02": [
+      "1.2",
+      "1.3"
+    ],
+    "faq-03": [
+      "1.2",
+      "1.3"
+    ],
+    "faq-04": [
+      "1.3"
+    ],
+    "faq-05": [
+      "1.2"
+    ],
+    "faq-06": [
+      "2"
+    ],
+    "faq-07": [
+      "2"
+    ],
+    "faq-08": [
+      "2.1"
+    ],
+    "faq-09": [
+      "2"
+    ]
+  }
+}

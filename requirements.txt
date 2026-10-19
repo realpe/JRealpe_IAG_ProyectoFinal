@@ -1,0 +1,17 @@
+# Proyecto Final — Agente de devoluciones de EcoMarket. Python 3.12.
+# Parte de las versiones fijadas en el Taller 2; langchain-anthropic subió langchain-core a 1.6.12.
+numpy==2.4.6
+requests==2.34.2
+
+langchain==1.4.3
+langchain-core==1.6.12
+langchain-text-splitters==1.1.2
+langchain-ollama==1.1.0
+langchain-chroma==1.1.0
+chromadb==1.5.9
+
+# Modelo de API opcional (requiere ANTHROPIC_API_KEY en el entorno)
+langchain-anthropic==1.7.6
+
+# Interfaz (Fase 4)
+streamlit==1.66.0

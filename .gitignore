@@ -1,0 +1,16 @@
+# Entorno virtual y cachés de Python
+.venv/
+__pycache__/
+*.pyc
+
+# Claves de API: nunca se suben al repositorio
+.env
+*.key
+
+# Base vectorial local (se regenera con el script de indexado)
+chroma_db/
+.chroma/
+
+# macOS
+.DS_Store
+registro_agente.jsonl
