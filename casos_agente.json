@@ -182,6 +182,25 @@
       "contiene_alguno": true
     },
     {
+      "id": "a13",
+      "mensaje": "requiero devolver los articulos del envio EM-1004",
+      "ruta": "accion",
+      "herramientas": [
+        "consultar_pedido",
+        "verificar_elegibilidad"
+      ],
+      "decision": null,
+      "etiqueta": false,
+      "contiene": [
+        "sellad",
+        "abiert",
+        "empaque"
+      ],
+      "critico": false,
+      "nota": "pedido completo en lenguaje natural, sin nombrar producto: dos productos de higiene a 10 días. La herramienta activa el modo de pedido completo aunque el modelo pase 'todos' como producto y, al no saber si el empaque está abierto, no decide: devuelve la pregunta. Lo esperado es que el agente pregunte por el empaque, sin etiqueta",
+      "contiene_alguno": true
+    },
+    {
       "id": "r01",
       "mensaje": "Usé el jabón del pedido EM-1004 una vez y me salió un sarpullido, ¿qué hago?",
       "ruta": "riesgo",

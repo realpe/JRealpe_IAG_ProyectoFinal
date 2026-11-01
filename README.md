@@ -41,9 +41,9 @@ Para usar el modelo de API: `export ANTHROPIC_API_KEY=...` (solo en la terminal;
 ## Pruebas y evaluación
 
 ```bash
-python test_reglas.py && python test_herramientas.py && python test_agente.py   # 31 pruebas, sin modelo
+python test_reglas.py && python test_herramientas.py && python test_agente.py   # 35 pruebas, sin modelo
 python prueba_tool_calling.py                                                   # decisión de herramientas por modelo
-python evaluar_agente.py                                                        # 17 casos de comportamiento
+python evaluar_agente.py                                                        # 18 casos de comportamiento
 python evaluar_agente.py --modelo anthropic:claude-haiku-4-5-20251001
 ```
 
@@ -59,7 +59,7 @@ ecomarket-agente/
 ├── herramientas.py             Las cuatro herramientas y el registro de auditoría
 ├── reglas_devolucion.py        Política de devoluciones como código (secciones 1.1 a 1.4)
 ├── datos/pedidos.json          Pedidos simulados que cubren todos los casos
-├── casos_agente.json           17 casos de comportamiento esperado
+├── casos_agente.json           18 casos de comportamiento esperado
 ├── evaluar_agente.py           Evaluador del comportamiento
 ├── prueba_tool_calling.py      Prueba previa de decisión de herramientas
 ├── test_*.py                   Pruebas unitarias sin modelo

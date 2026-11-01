@@ -24,15 +24,19 @@ Escenario observado (caso `a01`, primera corrida): el modelo respondió con un n
 
 Escenario observado en pruebas libres: tras un rechazo, el cliente replica "pero es que los pelos están en el producto y no lo he destapado". Sin número de pedido ni verbo de acción, el router lo envió al RAG, que respondió de forma genérica y sin el contexto. Para el cliente es una conversación que se reinicia sola; para la empresa, una queja legítima que se pierde. Mitigación implementada: la ruta del turno anterior se propaga, y un mensaje sin señales propias continúa la conversación de acción; el riesgo conserva la prioridad. Mitigación pendiente: memoria persistente por cliente entre sesiones.
 
-### 1.6 Casos que no deben automatizarse
+### 1.6 Decisiones tomadas con un dato que nadie dio
+
+Escenario observado en pruebas libres: "deseo devolver el cepillo dental" de un pedido de higiene personal. La sección 1.2 solo admite la devolución con el empaque sellado; el modelo no preguntó, la herramienta usó el valor por defecto `empaque_abierto=False` y emitió la etiqueta. El sistema decidió a favor del cliente con un dato que el cliente nunca dio, y lo hizo de forma silenciosa: la respuesta parecía correcta. Es la variante más difícil de detectar de la alucinación, porque no hay nada inventado a la vista, solo un valor por defecto en el lugar equivocado. Mitigación implementada: los parámetros de los que depende una decisión no tienen valor por defecto; cuando falta y la regla lo necesita, la herramienta devuelve la pregunta en lugar de la decisión, y el agente la traslada al cliente. La lección general: en una herramienta que decide, un valor por defecto es una decisión de política y debe revisarse como tal.
+
+### 1.7 Casos que no deben automatizarse
 
 Salud, amenaza legal, reclamos altos, segunda devolución en 60 días y solicitudes fuera de plazo están reservados a personas por la sección 1.4 de la política. El router los desvía antes del modelo cuando el vocabulario lo delata; las reglas los escalan cuando se detectan en la verificación. El límite conocido: una queja de salud con palabras no previstas en el router llega al agente, y depende de que el modelo use `motivo=reaccion_salud`. Un clasificador de intención entrenado, como el del Taller 1, reduciría ese hueco.
 
-### 1.7 Privacidad y mínimo privilegio
+### 1.8 Privacidad y mínimo privilegio
 
 Con el modelo local ningún dato sale del equipo. Con el modelo de API, el contenido del pedido (productos, precios, fechas) viaja a un tercero; es una decisión que debe tomar la empresa, y el sistema la deja explícita por configuración. Las herramientas tienen el mínimo alcance posible: consultar un pedido por id, verificar un producto, emitir una etiqueta ya autorizada. No existe una herramienta de reembolso ni de modificación del pedido, y el agente no puede crear una.
 
-### 1.8 Sesgo y equidad
+### 1.9 Sesgo y equidad
 
 Las reglas de elegibilidad son las mismas para todos los clientes y están en código auditable. El riesgo de trato desigual está en el lenguaje: un modelo puede responder con distinto tono o insistencia según cómo escribe el cliente. No se midió. Un conjunto de evaluación con el mismo caso redactado en registros distintos (formal, coloquial, con errores de escritura) sería la prueba adecuada.
 
@@ -56,7 +60,7 @@ Lo propuesto para producción, con las métricas y alertas que se derivan de los
 | Guías mencionadas en la respuesta que no coinciden con las emitidas | comparación respuesta vs. registro | Cualquiera: alucinación de acción |
 | Resultado del conjunto de comportamiento (`evaluar_agente.py`) | corrida programada | Caída respecto a la línea base: regresión tras cambiar prompt, modelo o reglas |
 
-La última es la más importante: el conjunto de 17 casos corre en cinco minutos y debería ejecutarse en cada cambio, como una prueba de regresión. En un entorno con base de datos relacional, el registro de turnos y de herramientas iría a tablas con retención definida, y las alertas a un sistema de monitoreo existente; el diseño de los registros ya tiene la forma necesaria.
+La última es la más importante: el conjunto de 18 casos corre en cinco minutos y debería ejecutarse en cada cambio, como una prueba de regresión. En un entorno con base de datos relacional, el registro de turnos y de herramientas iría a tablas con retención definida, y las alertas a un sistema de monitoreo existente; el diseño de los registros ya tiene la forma necesaria.
 
 ## 3. Propuestas de mejora
 
@@ -65,5 +69,5 @@ La última es la más importante: el conjunto de 17 casos corre en cinco minutos
 3. **Actualización del cliente en el CRM.** Registrar la devolución en el historial del cliente, que es lo que alimenta la regla de la segunda devolución en 60 días; hoy ese dato es estático en los pedidos simulados.
 4. **Clasificador de intención del Taller 1 como router.** Reemplazar o complementar las reglas por vocabulario con el clasificador entrenado, manteniendo las reglas de riesgo como lista fija de seguridad.
 5. **Memoria de conversación persistente.** El historial vive en la sesión de la interfaz; un cliente que vuelve al día siguiente empieza de cero.
-6. **Evaluación con varias corridas y jueces.** Los 17 casos se corrieron una vez por modelo. Varias corridas darían una tasa; un juez de fidelidad como el del Taller 2 permitiría medir la calidad de la redacción, no solo la decisión.
+6. **Evaluación con varias corridas y jueces.** Los 18 casos se corrieron una vez por modelo. Varias corridas darían una tasa; un juez de fidelidad como el del Taller 2 permitiría medir la calidad de la redacción, no solo la decisión.
 7. **Validación del corpus contra inyección** al indexar, y pruebas adversariales sobre los documentos.

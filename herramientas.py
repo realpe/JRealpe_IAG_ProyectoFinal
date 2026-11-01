@@ -29,8 +29,10 @@ import json
 import os
 import re
 import secrets
+import unicodedata
 from datetime import date, datetime
 from pathlib import Path
+from typing import Optional
 
 from langchain_core.tools import tool
 
@@ -67,10 +69,16 @@ def _firmar(id_pedido, sku):
 _VACIAS = {"de", "la", "el", "del", "un", "una", "x", "mi", "los", "las"}
 
 
+def _sin_tildes(texto):
+    """'Jabón' -> 'jabon': los clientes escriben con y sin tildes; la ñ se conserva."""
+    sin = "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn" or c == "\u0303")
+    return unicodedata.normalize("NFC", sin)   # vuelve a componer la ñ (n + tilde virgulilla)
+
+
 def _tokens(texto):
-    """Palabras en minúscula, con los números separados de sus unidades ('500ml' -> '500', 'ml')."""
-    t = re.sub(r"(\d+)([a-záéíóúñ]+)", r"\1 \2", (texto or "").lower())
-    return set(re.findall(r"[a-záéíóúñ0-9]+", t)) - _VACIAS
+    """Palabras en minúscula sin tildes, con los números separados de sus unidades ('500ml' -> '500', 'ml')."""
+    t = re.sub(r"(\d+)([a-zñ]+)", r"\1 \2", _sin_tildes((texto or "").lower()))
+    return set(re.findall(r"[a-zñ0-9]+", t)) - _VACIAS
 
 
 def _resolver_item(pedido, producto):
@@ -88,6 +96,18 @@ def _resolver_item(pedido, producto):
         return None, []
     empatados = [it for p, it in puntajes if p == maximo]
     return (empatados[0], []) if len(empatados) == 1 else (None, empatados)
+
+
+# Palabras con las que el cliente se refiere al pedido entero ("todos", "los artículos del envío",
+# "todo el pedido"). Si el texto solo contiene estas palabras, no nombra ningún producto concreto.
+_PEDIDO_COMPLETO = {"todo", "todos", "todas", "el", "los", "las", "mi", "del", "de", "pedido", "envio", "envío", "orden",
+                    "compra", "productos", "articulos", "artículos", "items", "ítems", "completo", "completa", "entero",
+                    "entera", "paquete"}
+
+
+def _es_pedido_completo(producto):
+    palabras = set(re.findall(r"[a-záéíóúñ0-9]+", (producto or "").lower()))
+    return not palabras or palabras <= _PEDIDO_COMPLETO
 
 
 def _pedido(id_pedido):
@@ -120,7 +140,7 @@ def consultar_pedido(id_pedido: str) -> dict:
 
 
 @tool
-def verificar_elegibilidad(id_pedido: str, producto: str, motivo: str = "otro", empaque_abierto: bool = False,
+def verificar_elegibilidad(id_pedido: str, producto: str, motivo: str = "otro", empaque_abierto: Optional[bool] = None,
                            devolver_pedido_completo: bool = False) -> dict:
     """Verifica si un producto de un pedido puede devolverse según la política de EcoMarket.
     Llama antes a consultar_pedido. `producto` es el SKU o el nombre del producto tal como
@@ -128,9 +148,12 @@ def verificar_elegibilidad(id_pedido: str, producto: str, motivo: str = "otro", 
     (roto, abollado, empaque roto), defectuoso (no funciona, vencido, en mal estado, contaminado
     o con cuerpos extraños como pelos o insectos), incompleto (faltan piezas o unidades),
     reaccion_salud, otro; si el cliente no lo dijo, usa 'otro' y verifica sin preguntar.
-    `empaque_abierto` indica si el cliente ya abrió el empaque (importa en higiene personal).
-    `devolver_pedido_completo` = true cuando el cliente quiere devolver todo el pedido: el
-    reclamo se evalúa por el valor total. Devuelve la decisión (ELEGIBLE, NO_ELEGIBLE o
+    `empaque_abierto` indica si el cliente ya abrió el empaque: true si lo abrió, false si sigue
+    sellado; déjalo sin valor si el cliente no lo ha dicho. Para productos de higiene personal la
+    herramienta no decide sin ese dato: devuelve la pregunta que debes hacerle al cliente.
+    `devolver_pedido_completo` = true cuando el cliente quiere devolver todo el pedido (o pasa
+    producto='todo el pedido'): el reclamo se evalúa por el valor total y, si hay varios
+    productos, devuelve `resultados` con la decisión y autorización de cada uno. Devuelve la decisión (ELEGIBLE, NO_ELEGIBLE o
     ESCALAR), la sección de la política que la sustenta y, si es elegible, el código de
     autorización interno que exige generar_etiqueta_devolucion (no se muestra al cliente)."""
     args = {"id_pedido": id_pedido, "producto": producto, "motivo": motivo, "empaque_abierto": empaque_abierto,
@@ -139,34 +162,86 @@ def verificar_elegibilidad(id_pedido: str, producto: str, motivo: str = "otro", 
     if not p:
         return _registrar("verificar_elegibilidad", args,
                           {"error": True, "mensaje": f"No existe el pedido '{id_pedido}'."})
-    item, candidatos = _resolver_item(p, producto)
-    if item is None and candidatos:
-        return _registrar("verificar_elegibilidad", args, {
-            "error": True, "mensaje": f"'{producto}' es ambiguo en el pedido {p['id']}; pregunte al cliente cuál.",
-            "candidatos": [f"{i['sku']} ({i['nombre']})" for i in candidatos]})
-    if item is None:
-        return _registrar("verificar_elegibilidad", args, {
-            "error": True, "mensaje": f"'{producto}' no está en el pedido {p['id']}.",
-            "productos_del_pedido": [f"{i['sku']} ({i['nombre']})" for i in p["items"]]})
     if motivo not in reglas.MOTIVOS:
         return _registrar("verificar_elegibilidad", args, {
             "error": True, "mensaje": f"Motivo '{motivo}' no válido.", "motivos_validos": list(reglas.MOTIVOS)})
+    # "todos los artículos", "todo el pedido", producto vacío: el cliente devuelve el pedido entero aunque
+    # el modelo no haya activado la bandera. Así la herramienta no depende de que el modelo acierte.
+    if _es_pedido_completo(producto):
+        devolver_pedido_completo = True
+        args["devolver_pedido_completo"] = True
+        items = list(p["items"])
+    else:
+        item, candidatos = _resolver_item(p, producto)
+        if item is None and candidatos:
+            return _registrar("verificar_elegibilidad", args, {
+                "error": True, "mensaje": f"'{producto}' es ambiguo en el pedido {p['id']}; pregunte al cliente cuál.",
+                "candidatos": [f"{i['sku']} ({i['nombre']})" for i in candidatos]})
+        if item is None:
+            return _registrar("verificar_elegibilidad", args, {
+                "error": True, "mensaje": f"'{producto}' no está en el pedido {p['id']}.",
+                "productos_del_pedido": [f"{i['sku']} ({i['nombre']})" for i in p["items"]]})
+        items = list(p["items"]) if devolver_pedido_completo else [item]
     # Valor del reclamo: el ítem más lo ya autorizado en el mismo pedido (un reclamo grande no se
     # puede fraccionar en varios pequeños), o el pedido completo si el cliente devuelve todo.
     previas = AUTORIZADAS.get(p["id"], {})
     if devolver_pedido_completo:
         valor = sum(i["precio_cop"] for i in p["items"])
     else:
-        valor = item["precio_cop"] + sum(v for k, v in previas.items() if k != item["sku"])
-    d = reglas.evaluar(p, item, motivo, empaque_abierto=bool(empaque_abierto), valor_reclamo=valor)
-    salida = {"error": False, "id_pedido": p["id"], "sku": item["sku"], "producto": item["nombre"],
-              "valor_reclamo_cop": valor, **d}
-    if d["decision"] == "ELEGIBLE":
-        AUTORIZADAS.setdefault(p["id"], {})[item["sku"]] = item["precio_cop"]
-        salida["autorizacion"] = _firmar(p["id"], item["sku"])
-        salida["siguiente_paso"] = ("Llame ahora a generar_etiqueta_devolucion con este id_pedido, este sku y esta "
-                                    "autorizacion; solo esa herramienta emite el número de guía. No muestre la "
-                                    "autorización al cliente.")
+        valor = items[0]["precio_cop"] + sum(v for k, v in previas.items() if k != items[0]["sku"])
+    # Cada producto se evalúa con sus propias reglas (categoría, empaque) pero con el valor total del
+    # reclamo, de modo que el tope de 1.4 y la segunda devolución se apliquen al conjunto.
+    evaluaciones = [(it, reglas.evaluar(p, it, motivo, empaque_abierto=bool(empaque_abierto), valor_reclamo=valor))
+                    for it in items]
+    escalado = next(((it, d) for it, d in evaluaciones if d["decision"] == "ESCALAR"), None)
+    # Higiene personal (1.2): la decisión depende de si el empaque sigue sellado. Si el cliente no lo
+    # dijo y la decisión llegó hasta esa regla (no escaló por 1.4, el pedido está entregado y no aplica
+    # la excepción 1.3), la herramienta no asume nada: devuelve la pregunta. Vive aquí y no en el
+    # prompt porque el modelo local verificaba sin preguntar y emitía la etiqueta asumiendo el empaque cerrado.
+    if empaque_abierto is None and not escalado:
+        higiene = [it for it, d in evaluaciones
+                   if it["categoria"] == "HIGIENE_PERSONAL" and d["seccion_politica"] == "1.2" and d["decision"] == "ELEGIBLE"]
+        if higiene:
+            return _registrar("verificar_elegibilidad", args, {
+                "error": True, "falta_informacion": "empaque_abierto",
+                "mensaje": "Producto de higiene personal: la política (1.2) solo admite la devolución con el empaque "
+                           "sellado. Pregunte al cliente si el empaque sigue sin abrir y vuelva a verificar con "
+                           "empaque_abierto=false (sellado) o true (abierto).",
+                "productos": [f"{it['sku']} ({it['nombre']})" for it in higiene]})
+    if escalado or len(evaluaciones) == 1:
+        # un solo resultado: el escalamiento (que prima sobre todo) o el único producto
+        item, d = escalado or evaluaciones[0]
+        salida = {"error": False, "id_pedido": p["id"], "sku": item["sku"], "producto": item["nombre"],
+                  "valor_reclamo_cop": valor, **d}
+        if d["decision"] == "ELEGIBLE":
+            AUTORIZADAS.setdefault(p["id"], {})[item["sku"]] = item["precio_cop"]
+            salida["autorizacion"] = _firmar(p["id"], item["sku"])
+            salida["siguiente_paso"] = ("Llame ahora a generar_etiqueta_devolucion con este id_pedido, este sku y esta "
+                                        "autorizacion; solo esa herramienta emite el número de guía. No muestre la "
+                                        "autorización al cliente.")
+        return _registrar("verificar_elegibilidad", args, salida)
+    # Pedido completo con varios productos y sin escalamiento: un resultado por producto.
+    resultados = []
+    for it, d in evaluaciones:
+        r = {"sku": it["sku"], "producto": it["nombre"], **d}
+        if d["decision"] == "ELEGIBLE":
+            AUTORIZADAS.setdefault(p["id"], {})[it["sku"]] = it["precio_cop"]
+            r["autorizacion"] = _firmar(p["id"], it["sku"])
+        resultados.append(r)
+    elegibles = [r for r in resultados if r["decision"] == "ELEGIBLE"]
+    principal = elegibles[0] if elegibles else resultados[0]
+    salida = {"error": False, "id_pedido": p["id"], "pedido_completo": True, "valor_reclamo_cop": valor,
+              "sku": principal["sku"], "producto": principal["producto"],
+              "decision": "ELEGIBLE" if elegibles else "NO_ELEGIBLE",
+              "seccion_politica": principal["seccion_politica"],
+              "explicacion": f"{len(elegibles)} de {len(resultados)} productos del pedido son elegibles. "
+                             + principal["explicacion"],
+              "requiere_evidencia": any(r.get("requiere_evidencia") for r in elegibles),
+              "requiere_humano": False, "resultados": resultados}
+    if elegibles:
+        salida["siguiente_paso"] = (f"Llame a generar_etiqueta_devolucion una vez por cada producto ELEGIBLE "
+                                    f"({', '.join(r['sku'] for r in elegibles)}), cada uno con su propia autorizacion. "
+                                    "No muestre las autorizaciones al cliente.")
     return _registrar("verificar_elegibilidad", args, salida)
 
 

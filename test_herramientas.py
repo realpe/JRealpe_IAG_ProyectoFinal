@@ -9,8 +9,10 @@ def test_consultar_existente_y_no():
 
 
 def test_resolver_por_nombre_y_error_guiado():
-    ok = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "cepillo", "motivo": "no_me_gusto"})
+    ok = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "cepillo", "motivo": "no_me_gusto", "empaque_abierto": False})
     assert not ok["error"] and ok["sku"] == "ECO-CEP-BAM" and ok["decision"] == "ELEGIBLE"
+    # sin tildes también resuelve ("jabon" -> "Jabón sólido artesanal x3" de EM-1007)
+    assert h.verificar_elegibilidad.invoke({"id_pedido": "EM-1007", "producto": "jabon", "motivo": "otro"})["decision"] == "NO_ELEGIBLE"
     err = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "termo", "motivo": "no_me_gusto"})
     assert err["error"] and len(err["productos_del_pedido"]) == 2
 
@@ -75,6 +77,37 @@ def test_tope_de_etiquetas_por_pedido():
 
 def test_registro():
     assert len(h.REGISTRO) >= 8 and {e["herramienta"] for e in h.REGISTRO} >= {"consultar_pedido", "verificar_elegibilidad", "generar_etiqueta_devolucion"}
+
+
+def test_pedido_completo_por_lenguaje_natural():
+    """'los artículos del envío' o 'todos' activan el modo de pedido completo sin la bandera."""
+    h.reiniciar()
+    r = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1005", "producto": "todos", "motivo": "otro"})
+    assert r["decision"] == "ESCALAR" and r["valor_reclamo_cop"] == 531000      # el total supera el tope
+    # EM-1004: dos productos de higiene; sin saber si el empaque está abierto, la herramienta pregunta
+    r = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "los artículos del envío", "motivo": "otro"})
+    assert r["error"] and r["falta_informacion"] == "empaque_abierto" and len(r["productos"]) == 2
+    r = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "los artículos del envío", "motivo": "otro",
+                                         "empaque_abierto": False})
+    assert not r["error"] and r["pedido_completo"] and len(r["resultados"]) == 2
+    assert all(x["decision"] == "ELEGIBLE" and x.get("autorizacion") for x in r["resultados"])
+    # cada producto obtiene su propia etiqueta con su propia autorización (dos, dentro del tope)
+    for x in r["resultados"]:
+        e = h.generar_etiqueta_devolucion.invoke({"id_pedido": "EM-1004", "sku": x["sku"], "autorizacion": x["autorizacion"]})
+        assert not e["error"]
+
+
+def test_higiene_no_decide_sin_saber_del_empaque():
+    """Un producto de higiene sin dato del empaque no es elegible por defecto: se pide el dato."""
+    h.reiniciar()
+    r = h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "cepillo", "motivo": "otro"})
+    assert r["error"] and r["falta_informacion"] == "empaque_abierto"
+    assert h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "cepillo", "motivo": "otro",
+                                            "empaque_abierto": False})["decision"] == "ELEGIBLE"
+    assert h.verificar_elegibilidad.invoke({"id_pedido": "EM-1004", "producto": "cepillo", "motivo": "otro",
+                                            "empaque_abierto": True})["decision"] == "NO_ELEGIBLE"
+    # si la decisión no llega a la regla 1.2 no se pregunta: EM-1007 aún no está entregado (FAQ-09)
+    assert h.verificar_elegibilidad.invoke({"id_pedido": "EM-1007", "producto": "jabon", "motivo": "otro"})["decision"] == "NO_ELEGIBLE"
 
 
 if __name__ == "__main__":
